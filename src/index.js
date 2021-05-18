@@ -1,34 +1,32 @@
 const Koa = require("koa");
+const Router = require("koa-router");
+
 const app = new Koa();
+const router = new Router();
 
-// promise 이용한 코드
-// app.use((ctx, next) => {
-//   console.log(1);
-//   const started = new Date();
-//   next().then(() => {
-//     console.log(new Date() - started + "ms");
-//   });
-// });
-
-// async, await 이용한 코드
-app.use(async (ctx, next) => {
-  console.log(1);
-  const started = new Date();
-  await next();
-  console.log(new Date() - started + "ms");
+router.get("/", (ctx, next) => {
+  ctx.body = "홈";
 });
 
-app.use((ctx, next) => {
-  console.log(2);
-  next();
+router.get("/about", (ctx, next) => {
+  ctx.body = "소개";
 });
 
-// app.use함수를 사용하여 미들웨어를 어플리케이션에 등록해준다.
-//ctx는 웹 요청, 응답에 대한 정보를 지니고 있음
-// next는 다음 미들웨어를 실행시키는 함수
-app.use((ctx) => {
-  ctx.body = "Hello Koa";
+router.get("/about/:name", (ctx, next) => {
+  const { name } = ctx.params;
+  ctx.body = name + "의 소개";
 });
+
+router.get("/post", (ctx, next) => {
+  const { id } = ctx.request.query;
+  if (id) {
+    ctx.body = "포스트 #" + id;
+  } else {
+    ctx.body = "포스트 아이디가 없습니다.";
+  }
+});
+
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(4000, () => {
   console.log("heurm server is listening to port 4000");
