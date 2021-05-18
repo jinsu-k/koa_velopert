@@ -1,0 +1,17 @@
+{
+  "name": "heurm-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jinsu-k/koa_velopert.git",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.26.0"
+  },
+  "scripts": {
+    "start": "node src",
+    "start:dev": "nodemon --watch src/ src/index.js"
+  }
+}
