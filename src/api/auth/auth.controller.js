@@ -40,6 +40,7 @@ exports.localRegister = async (ctx) => {
     return;
   }
 
+  // 계정 생성
   let account = null;
   try {
     account = await Account.localRegister(ctx.request.body);
@@ -47,6 +48,21 @@ exports.localRegister = async (ctx) => {
     ctx.throw(500, e);
   }
 
+  // 토큰 발급!
+  let token = null;
+  try {
+    token = await account.generateToken();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  // httpOnly 속성 적용 후 쿠키 설정
+  // maxAge => 최대 7일 생성유지
+  ctx.cookies.set("access_token", token, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  });
+  // 프로필 정보로 응답
   ctx.body = account.profile;
 };
 
@@ -81,6 +97,21 @@ exports.localLogin = async (ctx) => {
     return;
   }
 
+  // 토큰 발급!
+  let token = null;
+  try {
+    token = await account.generateToken();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  // httpOnly 속성 적용 후 쿠키 설정
+  // maxAge => 최대 7일 생성유지
+  ctx.cookies.set("access_token", token, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  });
+
   ctx.body = account.profile;
 };
 
@@ -105,5 +136,9 @@ exports.exists = async (ctx) => {
 
 // 로그아웃
 exports.logout = async (ctx) => {
-  ctx.body = "logout";
+  ctx.cookies.set("access_token", null, {
+    maxAge: 0,
+    httpOnly: true,
+  });
+  ctx.status = 204;
 };

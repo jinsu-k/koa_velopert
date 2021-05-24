@@ -1,3 +1,5 @@
+const { generateToken } = require("lib/token");
+
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const crypto = require("crypto");
@@ -69,6 +71,17 @@ Account.methods.validatePassword = function (password) {
   // 함수로 받은 password 해시값과, 데이터에 담겨있는 해시값 비교
   const hashed = hash(password);
   return this.password === hashed;
+};
+
+// token 발급하기
+Account.method.generateToken = function () {
+  // JWT에 담을 내용
+  const payload = {
+    _id: this._id,
+    profile: this.profile,
+  };
+
+  return generateToken(payload, "account");
 };
 
 module.exports = mongoose.model("Account", Account);
