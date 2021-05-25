@@ -142,3 +142,15 @@ exports.logout = async (ctx) => {
   });
   ctx.status = 204;
 };
+
+// access_token 존재하면 로그인된 유저 정보 알려주는 API
+exports.check = (ctx) => {
+  const { user } = ctx.request;
+
+  if (!user) {
+    ctx.status = 403;
+    return;
+  }
+
+  ctx.body = user.profile;
+};

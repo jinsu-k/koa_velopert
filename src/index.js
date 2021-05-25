@@ -10,6 +10,7 @@ const api = require("./api");
 
 const mongoose = require("mongoose");
 const bodyParser = require("koa-bodyparser");
+const { jwtMiddleware } = require("lib/token");
 
 //Node 네이티브 Promise 사용 => mongoose에서 데이터베이스에 요청 할 때 Promise를 사용 할 수 있는데
 //어떤 Promise를 사용 할 지 알려줘야함
@@ -35,7 +36,8 @@ const port = process.env.PORT || 4000;
 
 //bodyPaser는 라우터 코드보다 상단에 있어야함
 app.use(bodyParser());
-
+// JWT 디코딩 미들웨어 등록
+app.use(jwtMiddleware);
 router.use("/api", api.routes());
 app.use(router.routes()).use(router.allowedMethods());
 

@@ -74,7 +74,7 @@ Account.methods.validatePassword = function (password) {
 };
 
 // token 발급하기
-Account.method.generateToken = function () {
+Account.methods.generateToken = function () {
   // JWT에 담을 내용
   const payload = {
     _id: this._id,
